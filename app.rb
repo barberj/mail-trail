@@ -10,7 +10,8 @@ end
 class App < Sinatra::Base
   post '/' do
     email = request.body.read
-    $logger.info(email)
+    $logger.info(params.keys)
+    #$logger.info(email)
     status 200
     "Ok"
   end
