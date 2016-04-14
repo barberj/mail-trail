@@ -9,4 +9,4 @@ ADD . /src
 WORKDIR /src
 
 EXPOSE 4567
-CMD ["bundle", "exec", "mail-trail"]
+CMD ["bundle", "exec", "request-trail"]
