@@ -9,8 +9,8 @@ end
 
 class App < Sinatra::Base
   post '/' do
-    payload = JSON.parse(request.body.read)
-    $logger.info(payload)
+    email = request.body.read
+    $logger.info(email)
     status 200
     "Ok"
   end
