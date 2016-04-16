@@ -6,6 +6,7 @@ gem 'dotenv'
 gem 'thin'
 gem 'sinatra'
 gem 'remote_syslog_logger'
+gem 'mail'
 
 
 group :development do

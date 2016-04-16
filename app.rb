@@ -11,7 +11,13 @@ class App < Sinatra::Base
   post '/' do
     email = request.body.read
     $logger.info(params.keys)
-    #$logger.info(email)
+    email = params[:email]
+    cc = params[:cc]
+    to = params[:to]
+    from = params[:from]
+    subject = params[:subject]
+    $logger.info(email)
+    $logger.info(params)
     status 200
     "Ok"
   end
