@@ -5,6 +5,8 @@ GEM
     daemons (1.2.3)
     dotenv (2.1.1)
     eventmachine (1.2.0.1)
+    gmail_xoauth (0.4.1)
+      oauth (>= 0.3.6)
     httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -14,6 +16,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.99.1)
     multi_xml (0.5.5)
+    oauth (0.5.1)
     pry (0.10.3)
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
@@ -40,6 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   dotenv
+  gmail_xoauth
   httparty
   mail
   pry

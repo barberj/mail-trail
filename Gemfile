@@ -7,6 +7,7 @@ gem 'thin'
 gem 'sinatra'
 gem 'remote_syslog_logger'
 gem 'mail'
+gem 'gmail_xoauth'
 
 
 group :development do
