@@ -17,40 +17,8 @@ class App < Sinatra::Base
     html = params['html']
     text = params['text']
 
-    mail = Mail.read(request.body)
-    mail.attachments.each { |a| $logger.info(a.filename) }
-
-
-    $logger.info('Body')
-    $logger.info(request.body)
-
-    $logger.info('Keys')
-    $logger.info(params.keys)
-    $logger.info('Attachments')
-    $logger.info(params['attachments'])
-    $logger.info('Attachment-Info')
-    $logger.info(params['attachment-info'])
-    $logger.info('Content-Ids')
-    $logger.info(params['content-ids'])
-    $logger.info('Envelope')
-    $logger.info(params['envelope'])
-    $logger.info(params)
-
-    message = Mail.new do
-      from     from_address
+    message = Mail.new(request.body.read) do
       to       'barber.justin+stackmail@gmail.com'
-      subject  subject
-      headers  {}
-    end
-
-    message.html_part do
-      content_type "text/html; charset=UTF-8"
-      body html
-    end
-
-    message.text_part do
-      content_type "text/plain; charset=UTF-8"
-      body text
     end
 
     message.delivery_method(:smtp, {
