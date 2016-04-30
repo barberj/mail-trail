@@ -19,9 +19,28 @@ class App < Sinatra::Base
 
     $logger.info("Bout to proxy inbound")
     message = Mail.new(request.body.read) do
+      from     from_address
       to       'barber.justin+stackmail@gmail.com'
+      subject  subject
+      headers  {}
     end
-    $logger.info("New Sender is #{message.to}")
+
+    #message = Mail.new do
+    #  from     from_address
+    #  to       'barber.justin+stackmail@gmail.com'
+    #  subject  subject
+    #  headers  {}
+    #end
+
+    message.html_part do
+      content_type "text/html; charset=UTF-8"
+      body html
+    end
+
+    message.text_part do
+      content_type "text/plain; charset=UTF-8"
+      body text
+    end
 
     message.delivery_method(:smtp, {
       address: ENV.fetch("SMTP_ADDR"),
