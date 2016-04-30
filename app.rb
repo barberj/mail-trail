@@ -12,53 +12,9 @@ end
 class App < Sinatra::Base
   post '/' do
     message = Mail.new(params['email']) do
-      to 'justin.barber@salesloft.com'
-      message_id nil
+      to ENV.fetch('DEMO_ADRR')
+      message_id "#{SecureRandom.hex}@stackmail.simpleapp.io"
     end
-    #from_address = params['from']
-    #subject = params['subject']
-    #html = params['html']
-    #text = params['text']
-
-    #$logger.info("request.POST #{request.POST.keys}")
-    #raw_orig_message = request.body.read
-    #s3_upload('stackmail', 'raw_orig_message', body: raw_orig_message)
-    #s3_upload('stackmail', 'sendgrid_email', body: params['email'])
-
-    #orig_message = Mail.new(raw_orig_message)
-    #$logger.info("Original Message #{orig_message.message_id}")
-
-    #message = Mail.new do
-    #  from     from_address
-    #  to       'barber.justin+stackmail@gmail.com'
-    #  subject  subject
-    #  headers  {}
-    #end
-
-    #orig_message.attachments.each do |attachment|
-    #  $logger.info("Adding attachment #{attachment.filename}")
-    #  message.add_file(
-    #    filename: attachment.filename,
-    #    content: attachment.body.to_s
-    #  )
-    #end
-
-    #orig_message.attachments.zip(message.attachments).each do |orig, msg|
-    #  msg.header = orig.header
-
-    #  $logger.info("substituing inline #{orig.url} for #{msg.url}")
-    #  html = html.gsub(orig.url, msg.url)
-    #end
-
-    #message.html_part do
-    #  content_type "text/html; charset=UTF-8"
-    #  body html
-    #end
-
-    #message.text_part do
-    #  content_type "text/plain; charset=UTF-8"
-    #  body text
-    #end
 
     message.delivery_method(:smtp, {
       address: ENV.fetch("SMTP_ADDR"),
@@ -99,11 +55,4 @@ end
 def s3_upload(bucket_name, name, body:, **options)
   get_bucket(bucket_name).object(name).
     put(options.merge(body: body))
-end
-
-def s3_download(bucket_name, name)
-  buffer = StringIO.new
-  get_bucket(bucket_name).object(name).
-    get(options.merge(response_target: buffer))
-  buffer.read
 end
