@@ -24,6 +24,9 @@ class App < Sinatra::Base
     $logger.info(params['attachment-info'])
     $logger.info('Content-Ids')
     $logger.info(params['content-ids'])
+    $logger.info('Envelope')
+    $logger.info(params['envelope'])
+    $logger.info(params)
 
     message = Mail.new do
       from     from_address
