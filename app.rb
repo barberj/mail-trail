@@ -2,13 +2,12 @@ require 'sinatra'
 require 'json'
 require 'remote_syslog_logger'
 require 'mail'
+require 'aws-sdk'
 
 $logger = RemoteSyslogLogger.new('logs4.papertrailapp.com', 54460)
 $logger.formatter = proc do |severity, datetime, progname, msg|
   "#{severity} #{msg}"
 end
-
- ["headers", "attachment2", "dkim", "content-ids", "to", "cc", "html", "from", "text", "sender_ip", "attachment1", "envelope", "attachments", "subject", "attachment-info", "charsets", "SPF"]
 
 class App < Sinatra::Base
   post '/' do
@@ -18,10 +17,7 @@ class App < Sinatra::Base
     text = params['text']
 
     raw_orig_message = request.body.read
-
-    $logger.info("*"*50)
-    $logger.info(raw_orig_message)
-    $logger.info("*"*50)
+    s3_upload('stackmail', 'raw_orig_message', body: raw_orig_message)
 
     orig_message = Mail.new(raw_orig_message)
     $logger.info("Original Message #{orig_message.message_id}")
@@ -73,4 +69,35 @@ class App < Sinatra::Base
     status 200
     "Ok"
   end
+end
+
+def credentials
+  @credentials ||= Aws::Credentials.new(ENV.fetch('AWS_ID'), ENV.fetch('AWS_SECRET'))
+end
+
+def s3_client
+  @s3_client ||= Aws::S3::Client.new(
+    credentials: credentials,
+    region: 'us-east-1'
+  )
+end
+
+def s3
+  @s3 ||= Aws::S3::Resource.new(client: s3_client)
+end
+
+def get_bucket(name)
+  s3.bucket(name).tap { |bucket| bucket.exists? || bucket.create }
+end
+
+def s3_upload(bucket_name, name, body:, **options)
+  get_bucket(bucket_name).object(name).
+    put(options.merge(body: body))
+end
+
+def s3_download(bucket_name, name)
+  buffer = StringIO.new
+  get_bucket(bucket_name).object(name).
+    get(options.merge(response_target: buffer))
+  buffer.read
 end
