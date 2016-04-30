@@ -12,7 +12,7 @@ end
 class App < Sinatra::Base
   post '/' do
     message = Mail.new(params['email']) do
-      to ENV.fetch('DEMO_ADRR')
+      to ENV.fetch('DEMO_ADDR')
       message_id "#{SecureRandom.hex}@stackmail.simpleapp.io"
     end
 
