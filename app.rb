@@ -17,7 +17,14 @@ class App < Sinatra::Base
     html = params['html']
     text = params['text']
 
-    orig_message = Mail.new(request.body.read)
+    raw_orig_message = request.body.read
+
+    $logger.info("*"*50)
+    $logger.info(raw_orig_message)
+    $logger.info("*"*50)
+
+    orig_message = Mail.new(raw_orig_message)
+    $logger.info("Original Message #{message.message_id}")
 
     message = Mail.new do
       from     from_address
