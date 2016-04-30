@@ -14,14 +14,24 @@ class App < Sinatra::Base
   post '/' do
     from_address = params['from']
     subject = params['subject']
-    body = request.body.read
+    html = params['html']
+    text = params['text']
 
     message = Mail.new do
       from     from_address
       to       'barber.justin+stackmail@gmail.com'
       subject  subject
       headers  {}
-      body     body
+    end
+
+    message.html_part do
+      content_type "text/html; charset=UTF-8"
+      body html
+    end
+
+    message.text_part do
+      content_type "text/plain; charset=UTF-8"
+      body text
     end
 
     message.delivery_method(:smtp, {
