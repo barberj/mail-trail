@@ -19,6 +19,7 @@ class App < Sinatra::Base
     $logger.info("request.POST #{request.POST.keys}")
     raw_orig_message = request.body.read
     s3_upload('stackmail', 'raw_orig_message', body: raw_orig_message)
+    s3_upload('stackmail', 'sendgrid_email', body: params['email'])
 
     orig_message = Mail.new(raw_orig_message)
     $logger.info("Original Message #{orig_message.message_id}")
