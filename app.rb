@@ -17,8 +17,12 @@ class App < Sinatra::Base
     html = params['html']
     text = params['text']
 
-    $logger.info('Payload')
-    $logger.info(request.payload)
+    mail = Mail.read(request.body)
+    mail.attachments.each { |a| $logger.info(a.filename) }
+
+
+    $logger.info('Body')
+    $logger.info(request.body)
 
     $logger.info('Keys')
     $logger.info(params.keys)
