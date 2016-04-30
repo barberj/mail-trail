@@ -17,20 +17,26 @@ class App < Sinatra::Base
     html = params['html']
     text = params['text']
 
-    $logger.info("Bout to proxy inbound")
-    message = Mail.new(request.body.read) do
+    orig_message = Mail.new(request.body.read)
+
+    message = Mail.new do
       from     from_address
       to       'barber.justin+stackmail@gmail.com'
       subject  subject
       headers  {}
     end
 
-    #message = Mail.new do
-    #  from     from_address
-    #  to       'barber.justin+stackmail@gmail.com'
-    #  subject  subject
-    #  headers  {}
-    #end
+    orig_message.attachments.each do |attachment|
+      message.add_file(
+        filename: attachment.filename,
+        content: attachment.body.to_s
+      )
+    end
+
+    orig_message.attachments.zip(message.attachments).each do |orig, msg|
+      msg.header = orig.header
+      html = html.gsub(orig.url, msg.url)
+    end
 
     message.html_part do
       content_type "text/html; charset=UTF-8"
