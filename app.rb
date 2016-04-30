@@ -12,7 +12,7 @@ end
 class App < Sinatra::Base
   post '/' do
     message = Mail.new(params['email']) do
-      to 'barber.justin+stackmail@gmail.com'
+      to 'justin.barber@salesloft.com'
       message_id nil
     end
     #from_address = params['from']
