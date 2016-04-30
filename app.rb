@@ -13,6 +13,7 @@ class App < Sinatra::Base
   post '/' do
     message = Mail.new(params['email']) do
       to 'barber.justin+stackmail@gmail.com'
+      message_id nil
     end
     #from_address = params['from']
     #subject = params['subject']
