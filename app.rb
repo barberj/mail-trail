@@ -12,12 +12,16 @@ end
 
 class App < Sinatra::Base
   post '/' do
+    from_address = params['from']
+    subject = params['subject']
+    body = request.body.read
+
     message = Mail.new do
-      from     params['from']
+      from     from_address
       to       'barber.justin+stackmail@gmail.com'
-      subject  params['subject']
+      subject  subject
       headers  {}
-      body     request.body.read
+      body     body
     end
 
     message.delivery_method(:smtp, {
