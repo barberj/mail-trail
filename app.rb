@@ -27,6 +27,7 @@ class App < Sinatra::Base
     end
 
     orig_message.attachments.each do |attachment|
+      $logger.info("Adding attachment #{attachment.filename}")
       message.add_file(
         filename: attachment.filename,
         content: attachment.body.to_s
@@ -35,6 +36,8 @@ class App < Sinatra::Base
 
     orig_message.attachments.zip(message.attachments).each do |orig, msg|
       msg.header = orig.header
+
+      $logger.info("substituing inline #{orig.url} for #{msg.url}")
       html = html.gsub(orig.url, msg.url)
     end
 
