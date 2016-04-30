@@ -17,6 +17,12 @@ class App < Sinatra::Base
     html = params['html']
     text = params['text']
 
+    $logger.info(params.keys)
+    $logger.info('Attachments')
+    $logger.info(params['attachments'])
+    $logger.info('Attachment-Info')
+    $logger.info(params['attachment-info'])
+
     message = Mail.new do
       from     from_address
       to       'barber.justin+stackmail@gmail.com'
