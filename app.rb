@@ -16,6 +16,7 @@ class App < Sinatra::Base
       message_id "#{SecureRandom.hex}@stackmail.simpleapp.io"
     end
 
+    $logger.info("Available Keys #{params.keys}")
     message.delivery_method(:smtp, {
       address: ENV.fetch("SMTP_ADDR"),
       port: ENV.fetch("SMTP_PORT"),
