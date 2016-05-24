@@ -29,6 +29,9 @@ class App < Sinatra::Base
     message.deliver
     $logger.info("Sent message #{message.message_id}")
 
+    raw = request.env["rack.input"].read
+    s3_upload(:emails, Time.now.to_i, raw: raw)
+
     status 200
     "Ok"
   end
@@ -53,7 +56,7 @@ def get_bucket(name)
   s3.bucket(name).tap { |bucket| bucket.exists? || bucket.create }
 end
 
-def s3_upload(bucket_name, name, body:, **options)
+def s3_upload(bucket_name, name, raw:, **options)
   get_bucket(bucket_name).object(name).
-    put(options.merge(body: body))
+    put(options.merge(raw: body))
 end
