@@ -30,7 +30,7 @@ class App < Sinatra::Base
     $logger.info("Sent message #{message.message_id}")
 
     raw = request.env["rack.input"].read
-    s3_upload("emails", Time.now.to_i, raw: raw)
+    s3_upload("stacked-emails", Time.now.to_i, raw: raw)
     $logger.info("S3 uploaded")
 
     status 200
@@ -58,6 +58,6 @@ def get_bucket(name)
 end
 
 def s3_upload(bucket_name, name, raw:, **options)
-  get_bucket(bucket_name).object(name).
-    put(options.merge(raw: body))
+  get_bucket(bucket_name).object(name.to_s).
+    put(options.merge(body: raw))
 end
