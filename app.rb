@@ -30,7 +30,8 @@ class App < Sinatra::Base
     $logger.info("Sent message #{message.message_id}")
 
     raw = request.env["rack.input"].read
-    s3_upload(:emails, Time.now.to_i, raw: raw)
+    s3_upload("emails", Time.now.to_i, raw: raw)
+    $logger.info("S3 uploaded")
 
     status 200
     "Ok"
